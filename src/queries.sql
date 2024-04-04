@@ -1,8 +1,12 @@
 -- Find the number of players and display this as player count. The required column names are respectively: player count.
--- List the match sessions which are played before 2024 (exclusive). Display date in DD/MM/YYYY format. The required column names are respectively: ses- sion ID, assigned jury username, rating, date. Sort the results by date in as- cending order.
 
 
--- List all the fields of the match sessions with the minimum rating. Display Date in DD.MM.YYYY format. The required column names are respectively: ses- sion ID, team ID, stadium ID, stadium name, stadium country, time slot, date, assigned jury username, rating.
+-- List the match sessions which are played before 2024 (exclusive). Display date in DD/MM/YYYY format. The required column names are respectively: session_ID, assigned_jury_username, rating, date. Sort the results by date in ascending order.
+
+
+-- List all the fields of the match sessions with the minimum rating. Display Date in DD.MM.YYYY format. The required column names are respectively: session_ID, team_ID, stadium_ID, stadium name, stadium country, time slot, date, assigned jury username, rating.
+
+
 -- List assigned jury username and stadium name of the match sessions with the maximum rating. The required column names are respectively: assigned jury username, stadium name. Sort the results by assigned jury username in descending order.
 -- Find the average rating of all match sessions. The required column names are respectively: average rating.
 -- List all teams together with the number of players in each Team. Notice that in the Team table, each team id is unique. However, different ids may have the same team names as different agreements with coaches in the past were needed to be recorded. Note that there may be empty teams. The required column names are respectively: team name, coach name, coach surname, player count.
@@ -24,12 +28,34 @@
 USE VolleyDB;
 
 -- Query 1
-SELECT COUNT(*) AS player_count
-FROM Player;
+SELECT
+	COUNT(*) AS player_count
+FROM
+	Player;
 
 -- Query 2
-SELECT session_ID, assigned_jury_username, rating, DATE_FORMAT(date, '%d/%m/%Y') AS date
-FROM Match_Session
-WHERE date < '2024-01-01'
+SELECT
+	session_ID,
+	assigned_jury_username,
+	rating,
+	date
+FROM
+	MatchSession
+WHERE STR_TO_DATE(date, '%d.%m.%Y') <= date('2024-01-01')
+ORDER BY
+	STR_TO_DATE(date, '%d.%m.%Y') ASC;
 
 
+
+-- Query 20
+SELECT
+	name,
+	surname,
+	(CASE WHEN COUNT(DISTINCT PlayerPositions.position) > 1 THEN 'TRUE' ELSE 'FALSE' END) as more_than_one
+FROM
+	Player
+	INNER JOIN PlayerPositions ON PlayerPositions.username = Player.username
+GROUP BY
+	Player.username
+ORDER BY
+	name ASC;
