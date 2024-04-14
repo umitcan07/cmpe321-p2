@@ -379,9 +379,47 @@ JOIN Coach C ON C.username = T.coach_username
 GROUP BY C.username
 ORDER BY average_rating DESC;
 
--- Query 17
+-- ✅ Query 17
 -- For each team name, find the coach who has signed a contract that has the longest period with that team, and has never directed a match with a rating lower than 4.7 (4.7 is not acceptable) with ANY team. Please note that if there are no coaches who meet these conditions, show the coach name, surname, and day count as NULL or None. The required column names are respectively: team_name, name, surname, day count.
 ;
+SELECT 
+	table1.team_name,
+    table2.name,
+    table2.surname,
+    table2.duration as day_count
+FROM
+
+	(SELECT DISTINCT T.team_name
+	FROM Team T) as table1
+
+	left join
+
+	(SELECT
+		T.team_name,
+		coach.name,
+		coach.surname,
+		temp.duration
+	FROM
+		Team T left JOIN matchsession on T.team_ID = matchsession.team_ID inner join coach on T.coach_username = coach.username,
+		(SELECT 
+			MAX(DATEDIFF(STR_TO_DATE(T.contract_finish, '%d.%m.%Y'), STR_TO_DATE(T.contract_start, '%d.%m.%Y'))) as duration,
+			T.team_name
+		FROM Team T
+		GROUP BY T.team_name) as temp
+	WHERE
+		temp.team_name = T.team_name and temp.duration = DATEDIFF(STR_TO_DATE(T.contract_finish, '%d.%m.%Y'), STR_TO_DATE(T.contract_start, '%d.%m.%Y'))
+		and
+		   T.coach_username  NOT IN (
+				SELECT
+					team.coach_username
+				FROM
+					matchsession M left JOIN team on team.team_ID = M.team_ID
+				WHERE
+					rating < 4.7
+			)
+	) as table2
+    
+	on table1.team_name = table2.team_name;
 
 -- ✅ Query 18
 -- Find the names of coaches who have directed at least one match in each stadium. The required column names are respectively: name, surname, played_count.
