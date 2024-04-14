@@ -255,23 +255,46 @@ WHERE
 ORDER BY
 	M.session_ID;
 
--- Query 12
+-- ✅ Query 12
 -- For each year, find and list the coach who has directed the team with the highest average rating in that year. The required column names are respectively: name, surname, year, average rating. Sort by year in ascending order.
 ;
-SELECT
-	C.name,
-	C.surname,
-	YEAR(M.date) AS year,
-	MAX(AVG(M.rating)) OVER (PARTITION BY YEAR(M.date)) AS average_rating
+SELECT 
+    C.name,
+    C.surname,
+    sub_query.year,
+    sub_query.avg_rating
 FROM
-	MatchSession M
-	INNER JOIN Team T ON M.team_ID = T.team_ID
-	INNER JOIN Coach C ON T.coach_username = C.username
-GROUP BY
-	YEAR(M.date),
-	T.team_ID
+	(SELECT
+		AVG(M.rating) AS avg_rating,
+		SUBSTRING(M.date, 7, 9) AS year,
+		M.team_ID
+	FROM
+		MatchSession M
+	GROUP BY
+		SUBSTRING(M.date, 7, 9),
+		M.team_ID) as sub_query
+        INNER JOIN Team T ON sub_query.team_ID = T.team_ID
+		INNER JOIN Coach C ON T.coach_username = C.username,
+	(SELECT 
+		max(sub_query.avg_rating) as avg_rating,
+		sub_query.year as year
+	FROM
+		(SELECT
+			AVG(M.rating) AS avg_rating,
+			SUBSTRING(M.date, 7, 9) AS year,
+			M.team_ID
+		FROM
+			MatchSession M
+		GROUP BY
+			SUBSTRING(M.date, 7, 9),
+			M.team_ID) as sub_query
+	GROUP BY
+		sub_query.year) as max_ratings
+WHERE
+	max_ratings.avg_rating = sub_query.avg_rating and max_ratings.year = sub_query.year
 ORDER BY
-	year ASC;
+	sub_query.year ASC
+;
 
 -- ✅ Query 13
 -- For each stadium, find the coach who has directed the highest number of matches in that stadium. Please note that there can be multiple maximums. You can check the provided result table. The required column names are respectively: stadium name, name, surname, directed count.
