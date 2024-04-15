@@ -34,6 +34,14 @@ U19	Oliviere	Deriviere	0
 U19	Amicia	DeRune	0
  
 -- Output 7 
+position_ID	position_name
+0	Libero
+1	Setter
+2	Opposite hitter
+3	Outside hitter
+4	Middle blocker
+5	Middle Hitter
+ 
 -- Output 8 
 name	surname
 Daniele 	Santarelli
@@ -87,27 +95,24 @@ Ferhat 	Akbaş	4.6000000000000005
 Daniele 	Santarelli	4.55
  
 -- Output 17 
-team_name	name	surname	day_count
-Women B	Ferhat 	Akbaş	5478
-U19	Ferhat 	Akbaş	1826
-U19	Oliviere	Deriviere	1826
+team_name	name	surname	contract_duration
+Women A	None	None	None
+Women B	None	None	None
 U19	Amicia	DeRune	1826
+U19	Oliviere	Deriviere	1826
 Women C	Mike	Hebert	841
-Women A	Daniele 	Santarelli	None
  
 -- Output 18 
-name	surname	played_count
+name	surname	directed_stadium_count
 Daniele 	Santarelli	3
  
 -- Output 19 
 name	surname
-Gizem 	Örge
 Simge 	Aköz
-Kübra 	Akman
 Ayşe 	Aykaç
-Erika	Foley
 Andrea	Campbell
 Betsey	Lenoir
+Gizem 	Örge
  
 -- Output 20 
 name	surname	more_than_one

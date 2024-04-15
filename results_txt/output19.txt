@@ -1,8 +1,6 @@
 name	surname
-Gizem 	Örge
 Simge 	Aköz
-Kübra 	Akman
 Ayşe 	Aykaç
-Erika	Foley
 Andrea	Campbell
 Betsey	Lenoir
+Gizem 	Örge
