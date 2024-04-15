@@ -252,7 +252,7 @@ WHERE
 	AND T.channel_name = 'Digiturk';
 
 -- ✅ Query 11
--- List all match sessions that were not directed by Daniele Santarelli and were not played in UK. The required column names are respectively: session ID, name, surname, stadium name, stadium country, team name. Sort by session id in ascending order.
+-- List all match sessions that WERE directed by Daniele Santarelli and were not played in UK. The required column names are respectively: session ID, name, surname, stadium name, stadium country, team name. Sort by session id in ascending order.
 ;
 SELECT M.session_ID, C.`name`, C.surname, M.stadium_name, M.stadium_country, T.team_name
 FROM MatchSession M
@@ -384,7 +384,7 @@ HAVING
 		LIMIT 1);
 	
 -- ✅ Query 16
--- Find the average rating of match sessions for each coach, and list the coaches in descending order of their average ratings. The required column names are respectively: name, surname, average_rating. Sort by name in descending order.
+-- Find the average rating of match sessions for each coach, and list the coaches with their average ratings. The required column names are respectively: name, surname, average rating. Sort by name in descending order.
 ;
 -- To reach coach, we join team and coach tables.
 -- then we group by coach username and find average rating by aggragate operator. 
@@ -435,12 +435,12 @@ FROM
 
 
 -- ✅ Query 18
--- Find the names of coaches who have directed at least one match in each stadium. The required column names are respectively: name, surname, played_count.
+-- Find the names of coaches who have directed at least one match in each stadium. "directed_stadium_count" means the amount of unique stadiums that the coach has directed in. The required column names are respectively: name, surname, directed_stadium_count.
 ;
 SELECT
 	C.name,
 	C.surname,
-	COUNT(DISTINCT MS.stadium_name) AS played_count
+	COUNT(DISTINCT MS.stadium_name) AS directed_stadium_count
 FROM
 	Coach C
 	LEFT JOIN Team T ON T.coach_username = C.username
@@ -448,7 +448,7 @@ FROM
 GROUP BY
 	C.username
 HAVING
-	played_count = (
+	directed_stadium_count = (
 		SELECT
 			COUNT(DISTINCT stadium_name)
 		FROM

@@ -1,28 +1,28 @@
 -- Output 1 
 player_count
 24
- 
+
 -- Output 2 
 session_ID	assigned_jury_username	rating	date
 6	m_sevinc	4.6	01/09/2022
 4	e_sener	4.5	03/04/2023
 7	o_ozcelik	4.7	02/05/2023
 5	s_engin	4.4	27/05/2023
- 
+
 -- Output 3 
 session_ID	team_ID	stadium_ID	stadium_name	stadium_country	time_slot	date	assigned_jury_username	rating
 2	0	1	GD Voleybol Arena	TR	3	03.04.2024	o_ozcelik	4.4
 5	3	1	GD Voleybol Arena	TR	1	27.05.2023	s_engin	4.4
- 
+
 -- Output 4 
 assigned_jury_username	stadium_name
 o_ozcelik	GD Voleybol Arena
 m_sevinc	Copper Box Arena
- 
+
 -- Output 5 
 average_rating
 4.6000000000000005
- 
+
 -- Output 6 
 team_name	coach_name	coach_surname	player_count
 Women A	Daniele 	Santarelli	17
@@ -32,7 +32,7 @@ Women B	Giovanni 	Guidetti	7
 Women C	Mike	Hebert	0
 U19	Oliviere	Deriviere	0
 U19	Amicia	DeRune	0
- 
+
 -- Output 7 
 position_ID	position_name
 0	Libero
@@ -41,59 +41,59 @@ position_ID	position_name
 3	Outside hitter
 4	Middle blocker
 5	Middle Hitter
- 
+
 -- Output 8 
 name	surname
 Daniele 	Santarelli
 Giovanni 	Guidetti
 Ferhat 	Akbaş
- 
+
 -- Output 9 
 name	surname
 Kübra 	Akman
 Daenerys	Targaryen
- 
+
 -- Output 10 
 name	surname	channel_name	contract_start	contract_finish
 Giovanni 	Guidetti	Digiturk	11.09.2021	11.09.2026
 Mike	Hebert	Digiturk	01.04.2024	21.07.2026
- 
+
 -- Output 11 
 session_ID	name	surname	stadium_name	stadium_country	team_name
 0	Daniele 	Santarelli	Burhan Felek Voleybol Salonu	TR	Women A
 2	Daniele 	Santarelli	GD Voleybol Arena	TR	Women A
 6	Daniele 	Santarelli	GD Voleybol Arena	TR	Women A
- 
+
 -- Output 12 
 name	surname	year	average_rating
 Daniele 	Santarelli	2022	4.6
 Daniele 	Santarelli	2023	4.7
 Ferhat 	Akbaş	2024	4.9
- 
+
 -- Output 13 
 stadium_name	name	surname	directed_count
 Burhan Felek Voleybol Salonu	Daniele 	Santarelli	1
 Burhan Felek Voleybol Salonu	Giovanni 	Guidetti	1
 Copper Box Arena	Ferhat 	Akbaş	2
 GD Voleybol Arena	Daniele 	Santarelli	2
- 
+
 -- Output 14 
 session_ID	name	surname
 0	Daniele 	Santarelli
 1	Giovanni 	Guidetti
 2	Daniele 	Santarelli
 8	Giovanni 	Guidetti
- 
+
 -- Output 15 
 name	surname	rated_sessions
 Özlem	Özçelik	5
- 
+
 -- Output 16 
 name	surname	average_rating
 Giovanni 	Guidetti	4.7
 Ferhat 	Akbaş	4.6000000000000005
 Daniele 	Santarelli	4.55
- 
+
 -- Output 17 
 team_name	name	surname	contract_duration
 Women A	None	None	None
@@ -101,11 +101,11 @@ Women B	None	None	None
 U19	Amicia	DeRune	1826
 U19	Oliviere	Deriviere	1826
 Women C	Mike	Hebert	841
- 
+
 -- Output 18 
 name	surname	directed_stadium_count
 Daniele 	Santarelli	3
- 
+
 -- Output 19 
 name	surname
 Simge 	Aköz
@@ -113,7 +113,7 @@ Ayşe 	Aykaç
 Andrea	Campbell
 Betsey	Lenoir
 Gizem 	Örge
- 
+
 -- Output 20 
 name	surname	more_than_one
 Andrea	Campbell	TRUE
@@ -140,4 +140,4 @@ Simge 	Aköz	FALSE
 Stephanie	White	TRUE
 Wanda	Ramirez	TRUE
 Zehra 	Güneş	FALSE
- 
+
