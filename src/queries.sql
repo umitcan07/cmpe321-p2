@@ -262,7 +262,7 @@ SELECT
     C.name,
     C.surname,
     sub_query.year,
-    sub_query.avg_rating
+    sub_query.avg_rating as average_rating
 FROM
 	(SELECT
 		AVG(M.rating) AS avg_rating,
@@ -372,7 +372,7 @@ HAVING
 -- ✅ Query 16
 -- Find the average rating of match sessions for each coach, and list the coaches in descending order of their average ratings. The required column names are respectively: name, surname, average_rating. Sort by name in descending order.
 ;
-SELECT C.username, AVG(MS.rating) as average_rating FROM
+SELECT C.name, C.surname, AVG(MS.rating) as average_rating FROM
 MatchSession MS
 JOIN Team T ON T.team_ID = MS.team_ID
 JOIN Coach C ON C.username = T.coach_username
@@ -383,10 +383,10 @@ ORDER BY average_rating DESC;
 -- For each team name, find the coach who has signed a contract that has the longest period with that team, and has never directed a match with a rating lower than 4.7 (4.7 is not acceptable) with ANY team. Please note that if there are no coaches who meet these conditions, show the coach name, surname, and day count as NULL or None. The required column names are respectively: team_name, name, surname, day count.
 ;
 SELECT 
-	table1.team_name,
+    table1.team_name,
     table2.name,
     table2.surname,
-    table2.duration as day_count
+    table2.duration as contract_duration
 FROM
 
 	(SELECT DISTINCT T.team_name
