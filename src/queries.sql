@@ -448,11 +448,10 @@ HAVING
 ;
 SELECT DISTINCT P.name, P.surname
 FROM MatchSession MS
-JOIN Team T ON T.team_ID = MS.team_ID
-JOIN PlayerTeams PT ON PT.team = T.team_ID
-JOIN Player P ON P.username = PT.username
-JOIN PlayerPositions PP ON PP.username = P.username
-WHERE PP.`position` = 'Libero' AND MS.stadium_name = 'GD Voleybol Arena';
+JOIN Sessionsquads SS ON MS.session_ID = SS.session_ID
+JOIN Position POS ON SS.position_ID = POS.position_ID
+JOIN Player P ON P.username = SS.played_player_username
+WHERE POS.position_name = 'Libero' AND MS.stadium_name = 'GD Voleybol Arena';
 
 -- ✅ Query 20
 -- List all player ID’s with the column more than one which is either TRUE if that player plays more than one position or FALSE otherwise. The required column names are respectively: name, surname, more than one. Sort in ascending order by name.
