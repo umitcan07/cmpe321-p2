@@ -246,7 +246,7 @@ WHERE
 -- ✅ Query 11
 -- List all match sessions that were not directed by Daniele Santarelli and were not played in UK. The required column names are respectively: session ID, name, surname, stadium name, stadium country, team name. Sort by session id in ascending order.
 ;
-SELECT M.session_ID, C.`name`, C.surname, M.stadium_name, T.team_name
+SELECT M.session_ID, C.`name`, C.surname, M.stadium_name, M.stadium_country, T.team_name
 FROM MatchSession M
 LEFT JOIN Team T ON M.team_ID = T.team_ID 
 LEFT JOIN Coach C ON C.username = T.coach_username
