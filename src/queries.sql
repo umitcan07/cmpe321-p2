@@ -1,120 +1,15 @@
-USE VolleyDB;
-
--- CREATE TABLE Player 
--- (
---     username	VARCHAR(512),
---     password	VARCHAR(512),
---     name	VARCHAR(512),
---     surname	VARCHAR(512),
---     date_of_birth	VARCHAR(512), -- 27/02/1996
---     height	INT,
---     weight	INT,
---     PRIMARY KEY (username)
--- );
-
--- CREATE TABLE PlayerPositions 
--- (
---     player_positions_id	INT,
---     username	VARCHAR(512),
---     position	INT,
---     PRIMARY KEY (player_positions_id)
--- );
-
--- CREATE TABLE PlayerTeams 
--- (
---     player_teams_id	INT,
---     username	VARCHAR(512),
---     team	INT,
---     PRIMARY KEY (player_teams_id)
--- );
-
--- CREATE TABLE Team 
--- (
---     team_ID	INT,
---     team_name	VARCHAR(512),
---     coach_username	VARCHAR(512),
---     contract_start	VARCHAR(512),
---     contract_finish	VARCHAR(512),
---     channel_ID	INT,
---     channel_name	VARCHAR(512),
---     PRIMARY KEY (team_ID)
--- );
-
--- CREATE TABLE Coach 
--- (
---     username	VARCHAR(512),
---     password	VARCHAR(512),
---     name	VARCHAR(512),
---     surname	VARCHAR(512),
---     nationality	VARCHAR(512),
---     PRIMARY KEY (username)
--- );
-
--- CREATE TABLE Position 
--- (
---     position_ID	INT,
---     position_name	VARCHAR(512),
---     PRIMARY KEY (position_ID)
--- );
-
--- CREATE TABLE Jury 
--- (
---     username	VARCHAR(512),
---     password	VARCHAR(512),
---     name	VARCHAR(512),
---     surname	VARCHAR(512),
---     nationality	VARCHAR(512),
---     PRIMARY KEY (username)
--- );
-
--- CREATE TABLE MatchSession 
--- (
---     session_ID	INT,
---     team_ID	INT,
---     stadium_ID	INT,
---     stadium_name	VARCHAR(512),
---     stadium_country	VARCHAR(512),
---     time_slot	INT,
---     date	VARCHAR(512),
---     assigned_jury_username	VARCHAR(512),
---     rating	DOUBLE,
---     PRIMARY KEY (session_ID)
--- );
-
--- CREATE TABLE SessionSquads 
--- (
---     squad_ID	INT,
---     session_ID	INT,
---     played_player_username	VARCHAR(512),
---     position_ID	INT,
---     PRIMARY KEY (squad_ID)
--- );
-
--- INSERT INTO SessionSquads (squad_ID, session_ID, played_player_username, position_ID) VALUES ('48', '7', 'a_aykac', '0');
--- INSERT INTO MatchSession (session_ID, team_ID, stadium_ID, stadium_name, stadium_country, time_slot, date, assigned_jury_username, rating) VALUES ('0', '0', '0', 'Burhan Felek Voleybol Salonu', 'TR', '1', '10.03.2024', 'o_ozcelik', '4.5');
--- INSERT INTO Jury (username, password, name, surname, nationality) VALUES ('o_ozcelik', 'ozlem.0347', 'Özlem', 'Özçelik', 'TR');
--- INSERT INTO Position (position_ID, position_name) VALUES ('0', 'Libero');
--- INSERT INTO Coach (username, password, name, surname, nationality) VALUES ('d_santarelli', 'santa.really1', 'Daniele ', 'Santarelli', 'ITA');
--- INSERT INTO Team (team_ID, team_name, coach_username, contract_start, contract_finish, channel_ID, channel_name) VALUES ('6', 'U19', 'a_derune', '10.08.2005', '10.08.2010', '2', 'TRT');
--- INSERT INTO PlayerTeams (player_teams_id, username, team) VALUES ('1', 'g_orge', '0');
--- INSERT INTO PlayerPositions (player_positions_id, username, position) VALUES ('1', 'g_orge', '0');
--- INSERT INTO Player (username, password, name, surname, date_of_birth, height, weight) VALUES ('g_orge', 'Go.1993', 'Gizem ', 'Örge', '26/04/1993', '170', '59');
-
-
 -- ✅ Query 1
--- Find the number of players and display this as player count. The required column names are respectively: player count.
+-- Use the aggregation function "Count" to count the number of players in the Player table.
 ;
--- straightforward using aggregate oparator COUNT(). the field is named thanks to keyword "AS".
 SELECT
 	COUNT(*) AS player_count
 FROM
 	Player;
 
 -- ✅ Query 2
--- List the match sessions which are played before 2024 (exclusive). Display date in DD/MM/YYYY format. The required column names are respectively: session_ID, assigned_jury_username, rating, date. Sort the results by date in ascending order.
+-- Select session_ID, assigned_jury_username, rating directly and format the date column to display in the format "dd/mm/yyyy". Upon selecting the columns, filter the rows where the date is before 2024-01-01 and order the results by date in ascending order. Order the results by date in ascending order. 
+-- Use the STR_TO_DATE function to convert the date column to a date format. Use the DATE_FORMAT function to format the date column to display in the format "dd/mm/yyyy".
 ;
--- thanks to str_to_date operator, we convert our strings to date format so that we can compare dates and order them.
--- date_format operator helped to return date in the wished format.
 SELECT
 	session_ID,
 	assigned_jury_username,
@@ -127,12 +22,10 @@ WHERE
 ORDER BY
 	STR_TO_DATE(`date`, '%d.%m.%Y') ASC;
 
-
 -- ✅ Query 3
--- List all the fields of the match sessions with the minimum rating. Display Date in DD.MM.YYYY format. The required column names are respectively: session_ID, team_ID, stadium_ID, stadium_name, stadium_country, time_slot, date, assigned_jury_username, rating.
+-- Find the minimum rating across all matchsessions in a subquery and select all columns from MatchSession where the rating is equal to the minimum rating.
+-- Finding Min in a subquery is similar to Query 1 syntax-wise. The only difference is MIN(rating) is used instead of COUNT(*).
 ;
--- In the subquery, we find the minimum rating across all matchsessions using the aggragate operator MIN.
--- In main query, we compare ratings with the minimum one and if they are equal we return them.
 SELECT
 	*
 FROM
@@ -145,11 +38,8 @@ WHERE
 			MatchSession);
 
 -- ✅ Query 4
--- List assigned jury username and stadium name of the match sessions with the maximum rating. The required column names are respectively: assigned jury username, stadium name. Sort the results by assigned jury username in descending order.
+-- Find the maximum rating across all match sessions in a subquery and select the assigned_jury_username and stadium_name columns from MatchSession where the rating is equal to the maximum rating. Sort the result by assigned_jury_username in descending order.
 ;
--- in the subquery, we find the maximum rating accross all matchsessions.
--- in where clause of the main query, we filter matchsessions by only picking those with the maximum rating.
--- order by clause is used to meet sorting requirement.
 SELECT
 	assigned_jury_username,
 	stadium_name
@@ -163,19 +53,18 @@ ORDER BY
 	assigned_jury_username DESC;
 
 -- ✅ Query 5
--- Find the average rating of all match sessions. The required column names are respectively: average rating.
+-- Use the AVG() aggregate operator on the rating column to calculate the average rating.
 ;
--- straightforward using the aggregate operator AVG().
 SELECT
 	AVG(rating) AS average_rating
 FROM
 	MatchSession;
 
-
 -- ✅ Query 6
--- List all teams together with the number of players in each Team. Notice that in the Team table, each team id is unique. However, different ids may have the same team names as different agreements with coaches in the past were needed to be recorded. Note that there may be empty teams. The required column names are respectively: team name, coach name, coach surname, player count.
+-- List all teams together with the number of players in each Team. 
+-- Notice that in the Team table, each team id is unique. However, different IDs may have same team names as different agreements with coaches in the past were needed to be recorded. 
+-- Note that there may be empty teams. The required column names are respectively: team name, coach name, coach surname, player count.
 ;
--- 
 SELECT
 	T.team_name,
 	C.name AS coach_name,
@@ -194,12 +83,13 @@ ORDER BY
 	player_count DESC;
 
 -- ✅ Query 7
--- Insert a new position, whose position ID is “5” and position name is “Middle Hitter”. No required column names. No required output.
+-- Insert into Table "Position". Specify values after "VALUES" keyword in the order of columns in the table. Namely positon_ID, position_name
 ;
 INSERT INTO `Position` VALUES (5, 'Middle Hitter');
 
 -- ✅ Query 8
--- Find the names and surnames of coaches who have directed more than or equal to 2 match sessions. The required column names are respectively: name, sur- name. Sort by surname in descending order.
+-- Merge match sessions with the teams, then merge with the coaches, and group by the coaches.
+-- In the resulting view, list the names and surnames of the coaches with at least 2 match sessions.
 ;
 SELECT
 	C.name,
@@ -216,26 +106,40 @@ ORDER BY
 	C.surname DESC;
 
 -- ✅ Query 9
--- Find the names and surnames of players who were born in the same year as “Ebrar Karakurt” and who are taller than her. The required column names are respectively: name, surname. Sort by surname in ascending order.
+-- In separate subqueries, find the date_of_birth and height of the player whose name is 'Ebrar Karakurt'.
+-- Then, select the names and surnames of the players who were born in the same year and are taller than 'Ebrar Karakurt'. Sort the results by surname in ascending order.
+-- Use DATE() to convert the date_of_birth to a date and YEAR() to extract the year.
 ;
 SELECT
-	`name`,
-	surname
+	P.name,
+	P.surname
 FROM
-	Player
+	Player P
 WHERE
-	YEAR(STR_TO_DATE(date_of_birth, '%d/%m/%Y')) = (
+	YEAR(STR_TO_DATE(P.date_of_birth, '%d/%m/%Y')) = (
 		SELECT
-			YEAR(STR_TO_DATE(date_of_birth, '%d/%m/%Y')) AS date_of_birth
+			YEAR(STR_TO_DATE(date_of_birth, '%d/%m/%Y'))
+		FROM
+			Player P
+		WHERE
+			CONCAT(P.`name`, P.surname) = 'Ebrar Karakurt'
+			)
+	AND P.height > (
+		SELECT
+			height
 		FROM
 			Player
 		WHERE
 			`name` = 'Ebrar '
 			AND surname = 'Karakurt')
-	AND (`name` != 'Ebrar ' OR `surname` != 'Karakurt');
+ORDER BY
+	P.surname ASC;
 
 -- ✅ Query 10
--- List all the coaches’ names who directed a single team non-stop between 02.09.2024- 31.12.2025 (inclusive) and that team has agreement with “Digiturk”. The required column names are respectively: name, surname, channel name, contract start, contract finish. Sort by name in ascending order.
+-- Join Coach table with the Team table by matching coach usernames. Return the name, surname, channel name, contract start and contract finish of the coaches whose contract is valid between 2024-09-02 and 2025-12-31 and who are broadcasting on the 'Digiturk' channel.
+-- Use STR_TO_DATE function to convert the contract start and contract finish dates to DATE type.
+-- Use date function to convert the given date string to DATE type.
+-- Use equality, less than or equal to, and greater than or equal to operators in the WHERE clause.
 ;
 SELECT
 	C.name,
@@ -252,62 +156,74 @@ WHERE
 	AND T.channel_name = 'Digiturk';
 
 -- ✅ Query 11
--- List all match sessions that WERE directed by Daniele Santarelli and were not played in UK. The required column names are respectively: session ID, name, surname, stadium name, stadium country, team name. Sort by session id in ascending order.
+-- Join the MatchSession table with the Team and Coach tables by matching the team_ID and coach_username columns. 
+-- Return the session_ID, name, surname, stadium_name, stadium_country, and team_name of the coaches whose full name is 'Daniele Santarelli' and the stadium_country is not 'UK'. 
+-- Use CONCAT() to concatenate the name and surname of coaches.
+-- Sort the result by session_ID in ascending order.
 ;
 SELECT M.session_ID, C.`name`, C.surname, M.stadium_name, M.stadium_country, T.team_name
 FROM MatchSession M
-LEFT JOIN Team T ON M.team_ID = T.team_ID 
+LEFT JOIN Team T ON M.team_ID = T.team_ID
 LEFT JOIN Coach C ON C.username = T.coach_username
 WHERE
-	C.username = 'd_santarelli' AND M.stadium_country != 'UK'
+	CONCAT(C.name, C.surname) = 'Daniele Santarelli' AND M.stadium_country != 'UK'
 ORDER BY
 	M.session_ID;
 
--- Query 12
--- For each year, find and list the coach who has directed the team with the highest average rating in that year. The required column names are respectively: name, surname, year, average rating. Sort by year in ascending order.
+-- ✅ Query 12
+-- Group match sessions by year and team, then find the average rating for each of them in a subquery.
+-- Join team and coach tables to be able to return the name and surname of the coach.
+-- Group the subquery by year and find the maximum rating for each year.
+-- Compare the rating and year fields of the two subqueries to find the team with the highest average rating for each year.
+-- Return the name and surname of the coach of the team with the highest average rating for each year.
+-- Sort the results by year in ascending order.
 ;
--- in temporary view called subquery, we group matchsessions by year and team, then find average rating for each of them.
--- we use this view twice in different ways:
--- firstly, we join team and coach tables so that we can reach corresponding coach to return
--- secondly, we once more group but this time just with year instead of both year and team, and then
--- using aggregate operator max we find the maximum rating for each year.
--- in where clause, we compare rating and year fields of the two temporary view and reach wished result.
-SELECT C.name, C.surname, sub_query.year, sub_query.avg_rating as average_rating
-FROM
-	(SELECT	AVG(M.rating) AS avg_rating, SUBSTRING(M.date, 7, 9) AS year, M.team_ID
-		FROM
-			MatchSession M
-		GROUP BY
-			SUBSTRING(M.date, 7, 9),
-			M.team_ID) as sub_query
-        INNER JOIN Team T ON sub_query.team_ID = T.team_ID
-		INNER JOIN Coach C ON T.coach_username = C.username,
-	(SELECT 
-		max(sub_query.avg_rating) as avg_rating,
-		sub_query.year as year
+SELECT
+	C.name,
+	C.surname,
+	sub_query.year,
+	sub_query.avg_rating AS average_rating
+FROM (
+	SELECT
+		AVG(M.rating) AS avg_rating,
+		SUBSTRING(M.date, 7, 9) AS year,
+		M.team_ID
 	FROM
-		(SELECT
-			AVG(M.rating) AS avg_rating,
-			SUBSTRING(M.date, 7, 9) AS year,
-			M.team_ID
-		FROM
-			MatchSession M
-		GROUP BY
-			SUBSTRING(M.date, 7, 9),
-			M.team_ID) as sub_query
+		MatchSession M
 	GROUP BY
-		sub_query.year) as max_ratings
+		SUBSTRING(M.date, 7, 9),
+		M.team_ID) AS sub_query
+	INNER JOIN Team T ON sub_query.team_ID = T.team_ID
+	INNER JOIN Coach C ON T.coach_username = C.username,
+	(
+		SELECT
+			max(sub_query.avg_rating) AS avg_rating,
+			sub_query.year AS year
+		FROM (
+			SELECT
+				AVG(M.rating) AS avg_rating,
+				SUBSTRING(M.date, 7, 9) AS year,
+				M.team_ID
+			FROM
+				MatchSession M
+			GROUP BY
+				SUBSTRING(M.date, 7, 9),
+				M.team_ID) AS sub_query
+		GROUP BY
+			sub_query.year) AS max_ratings
 WHERE
-	max_ratings.avg_rating = sub_query.avg_rating and max_ratings.year = sub_query.year
+	max_ratings.avg_rating = sub_query.avg_rating
+	AND max_ratings.year = sub_query.year
 ORDER BY
 	sub_query.year ASC;
 
-
-
 -- ✅ Query 13
--- For each stadium, find the coach who has directed the highest number of matches in that stadium. Please note that there can be multiple maximums. You can check the provided result table. The required column names are respectively: stadium name, name, surname, directed count.
+-- Join the MatchSession table with the Team and Coach tables by matching the team_ID and coach_username columns.
+-- Return the stadium_name, name, surname, and the number of sessions directed by each coach in each stadium.
+-- Filter the results to include only the coaches who directed the most sessions in each stadium.
+-- Sort the result by stadium_name in ascending order, and then by the number of directed sessions in descending order.
+-- Uses a subquery to determine the maximum number of directed sessions for each stadium before filtering the results to include only the coaches with that maximum count.
 ;
-
 SELECT
 	MS.stadium_name,
 	C.name,
@@ -340,13 +256,11 @@ HAVING
 		MS.stadium_name,
 		directed_count DESC;
 
-	
-
 -- ✅ Query 14
--- List all the matches that were played after 2023 (meaning starting from 01.01.2024 inclusive), and have not been directed by “Ferhat Akbas”. The required column names are respectively: session ID, name, surname. Sort by session id in ascending order.
+-- Join Team to Match Session by team_ID and Coach to Team by coach_username. Then filter the results to include only the sessions that occur after January 1, 2024, and exclude the coach with the username 'f_akbas'.
+-- STR_TO_DATE() is used to convert the date string in the MatchSession table to a date format that can be compared with the date '2024-01-01'.
+-- Returns the session_ID, name, and surname of the coaches who meet the specified conditions, sorted by session_ID in ascending order.
 ;
--- we reach to coach data by joining team and coach to matchsession.
--- the filtering is satisfied by the conditions in the where clause.
 SELECT M.session_ID, C.name, C.surname
 FROM MatchSession M
 JOIN Team T ON T.team_ID = M.team_ID
@@ -355,12 +269,9 @@ WHERE STR_TO_DATE(M.`date`, '%d.%m.%Y') >= date('2024-01-01') AND C.username != 
 ORDER BY M.session_ID;
 
 -- ✅ Query 15
--- Find the jury who has rated the highest number of match sessions in the database. The required column names are respectively: name, surname, rated sessions.
+-- Group match sessions by juries and then count rated sessions for each jury in a subquery. Order within the subquery by the number of rated sessions in descending order and limit the result to 1 to get the maximum number of rated sessions by a jury.
+-- Then, join the jury table with the match session table and group by the assigned jury username. Filter the results to include only the juries who have rated the maximum number of sessions.
 ;
--- in the subquery which is in having clause, we group match sessions by juries and then count rated sessions for each jury.
--- then by ordering descending and limiting the result by 1, we reach to the maximum number of sessions rated by a jury.
--- After that the same query is used as main query with addition of having clause which comes with 
--- the condition of having the same number of rated session as the mmaximum one.
 SELECT
 	J.name,
 	J.surname,
@@ -382,12 +293,9 @@ HAVING
 		ORDER BY
 			rated_sessions DESC
 		LIMIT 1);
-	
+
 -- ✅ Query 16
--- Find the average rating of match sessions for each coach, and list the coaches with their average ratings. The required column names are respectively: name, surname, average rating. Sort by name in descending order.
-;
--- To reach coach, we join team and coach tables.
--- then we group by coach username and find average rating by aggragate operator. 
+-- Join MatchSession to Team by team_ID and Team to Coach by coach_username. Then group the results by coach username and calculate the average rating of the sessions for each coach with AVG() aggregate function on the rating. Sort the results by average rating in descending order.
 SELECT C.name, C.surname, AVG(MS.rating) as average_rating FROM
 MatchSession MS
 JOIN Team T ON T.team_ID = MS.team_ID
@@ -395,47 +303,53 @@ JOIN Coach C ON C.username = T.coach_username
 GROUP BY C.username
 ORDER BY average_rating DESC;
 
--- Query 17
--- For each team name, find the coach who has signed a contract that has the longest period with that team, and has never directed a match with a rating lower than 4.7 (4.7 is not acceptable) with ANY team. Please note that if there are no coaches who meet these conditions, show the coach name, surname, and day count as NULL or None. The required column names are respectively: team_name, name, surname, day count.
+-- ✅ Query 17
+-- The final schema consists of "table1 left outer join table2", allowing the inclusion of NULLs for teams that do not meet specified conditions. Table1 contains exactly one team name for each entry.
+-- Table2 features a subquery that creates a temporary view named 'temp', which displays the maximum contract duration for coaches across each team. Additionally, this setup facilitates the processing of coach usernames with match ratings through the join of MatchSession, Team, and Coach tables.
+-- The WHERE clause incorporates two conditions connected by a logical AND operator: it excludes coaches whose contract durations are less than the maximum for their respective teams, and it also excludes coaches who have any ratings lower than 4.7.
 ;
--- The final schema is constitues of the body: "table1 left outer join table2". The reason is to have nulls for the teams which does not meet the conditions.
--- table1 just has team names exactly one for each.
--- table2 has a subquery which creates a temporary view called temp. temp shows the maximum of the coach contract durations for each team.
--- also the join of matchsession, team and coach enables us to process coach username with match ratings.
--- there are two conditions in where clause which are connected by logical and operator.
--- first condition eliminates those coaches which has less contract duration than the maximum one for each team (using temp view).
--- second condition eliminates those coaches which has any rating lower than 4.7.
-SELECT 
-	table1.team_name, table2.name, table2.surname, table2.duration as contract_duration
-FROM
-	(SELECT DISTINCT T.team_name
-	FROM Team T) as table1
-
-	LEFT OUTER JOIN
-
-	(SELECT
-		T.team_name, coach.name, coach.surname,	temp.duration
+SELECT
+	table1.team_name,
+	table2.name,
+	table2.surname,
+	table2.duration AS contract_duration
+FROM ( SELECT DISTINCT
+		T.team_name
 	FROM
-		Team T left JOIN matchsession on T.team_ID = matchsession.team_ID inner join coach on T.coach_username = coach.username,
-		(SELECT 
-			MAX(DATEDIFF(STR_TO_DATE(T.contract_finish, '%d.%m.%Y'), STR_TO_DATE(T.contract_start, '%d.%m.%Y'))) as duration,
-			T.team_name
-		FROM Team T
-		GROUP BY T.team_name) as temp
-	WHERE
-		temp.team_name = T.team_name and temp.duration = DATEDIFF(STR_TO_DATE(T.contract_finish, '%d.%m.%Y'), STR_TO_DATE(T.contract_start, '%d.%m.%Y'))
-		and	T.coach_username  NOT IN (
-				SELECT	team.coach_username
-				FROM	matchsession M left JOIN team on team.team_ID = M.team_ID
-				WHERE	rating < 4.7	)
-	) as table2
-    
-	ON table1.team_name = table2.team_name
-;
+		Team T) AS table1
+	LEFT OUTER JOIN (
+	SELECT
+		T.team_name,
+		coach.name,
+		coach.surname,
+		temp.duration
+	FROM
+		Team T
+		LEFT JOIN matchsession ON T.team_ID = matchsession.team_ID
+		INNER JOIN coach ON T.coach_username = coach.username,
+		(
+			SELECT
+				MAX(DATEDIFF(STR_TO_DATE(T.contract_finish, '%d.%m.%Y'), STR_TO_DATE(T.contract_start, '%d.%m.%Y'))) AS duration,
+				T.team_name
+			FROM
+				Team T
+			GROUP BY
+				T.team_name) AS temp
+		WHERE
+			temp.team_name = T.team_name
+			AND temp.duration = DATEDIFF(STR_TO_DATE(T.contract_finish, '%d.%m.%Y'), STR_TO_DATE(T.contract_start, '%d.%m.%Y'))
+			AND T.coach_username NOT IN(
+				SELECT
+					team.coach_username FROM matchsession M
+				LEFT JOIN team ON team.team_ID = M.team_ID
+			WHERE
+				rating < 4.7)) AS table2 ON table1.team_name = table2.team_name;
 
 
 -- ✅ Query 18
--- Find the names of coaches who have directed at least one match in each stadium. "directed_stadium_count" means the amount of unique stadiums that the coach has directed in. The required column names are respectively: name, surname, directed_stadium_count.
+-- Join Team to Coach by coach_username and MatchSession to Team by team_ID. Group the coaches by their username and count the number of distinct stadiums they have directed matches in. Filter the results to include only the coaches who have directed matches in all stadiums. 
+-- Return the name and surname of the coaches who meet the specified conditions.
+-- To get the directed_stadium_count in a subquery, count the number of distinct stadium names in the MatchSession table where the stadium_name is not NULL.
 ;
 SELECT
 	C.name,
@@ -457,21 +371,21 @@ HAVING
 			MS.stadium_name IS NOT NULL);
 
 -- ✅ Query 19
--- Return the players who have played in stadium name “GD Voleybol Arena” as position name “Libero”. The required column names are respectively: name, surname.
+-- Join MatchSession to SessionSquads by session_ID, Position by position_ID, and Player by played_player_username. 
+-- Filter the results to include only the players who have played as a 'Libero' in the 'GD Voleybol Arena' stadium. 
+-- Overall its a simple join query with multiple tables and a WHERE clause to filter the results.
+-- Return the name and surname of the players from Player table who meet the specified conditions.
 ;
--- Sessionsquads has the data which played_player_username in what position_ID in what session_ID. 
--- reference to position table on position_ID enables us to reach position_name and hence filtering according to.
--- reference to matchsession table on session_ID enables us to reach stadium_name and hence filtering according to.
--- reference to player table on username enables us to reach name and surname of player.
 SELECT DISTINCT P.name, P.surname
-FROM Sessionsquads SS
+FROM SessionSquads SS
 JOIN MatchSession MS ON MS.session_ID = SS.session_ID
 JOIN Position POS ON SS.position_ID = POS.position_ID
 JOIN Player P ON P.username = SS.played_player_username
 WHERE POS.position_name = 'Libero' AND MS.stadium_name = 'GD Voleybol Arena';
 
 -- ✅ Query 20
--- List all player ID’s with the column more than one which is either TRUE if that player plays more than one position or FALSE otherwise. The required column names are respectively: name, surname, more than one. Sort in ascending order by name.
+-- Join the Player table to the PlayerPositions table by username. Group the players by their username and count the number of distinct positions they have played in. Filter the results to include only the players who have played in more than one position.
+-- To get the more_than_one column, use a CASE statement to check if the count of distinct positions is greater than 1. If it is, return 'TRUE', otherwise return 'FALSE'.
 ;
 SELECT
 	name,
@@ -484,3 +398,4 @@ GROUP BY
 	Player.username
 ORDER BY
 	name ASC;
+
